@@ -12,7 +12,7 @@ from typing import Tuple, List
 from scipy.integrate import quad
 from scipy.optimize import fsolve
 
-from numpy import sqrt, sin, arange
+from numpy import sqrt, sin, arange, float_, around
 
 
 def fun(x: float) -> float:
@@ -27,7 +27,7 @@ def output_data(start: float | int, end: float | int, rg: float | int) -> Tuple[
     return xs, ys
 
 
-def _general(x1: float, x2: float, s_iter, end_iter, k=0, result=None) -> float:
+def _general(x1: float, x2: float, end_iter, k=0, s_iter=0, result=None) -> float:
     h = (x2 - x1) / end_iter
     result = 0
     start = x1 + k * h / 2
@@ -38,23 +38,23 @@ def _general(x1: float, x2: float, s_iter, end_iter, k=0, result=None) -> float:
     return result
 
 
-def ave_rec(x1: float, x2: float, s_iter, end_iter) -> float:
-    return _general(x1, x2, s_iter, end_iter, k=1)
+def ave_rec(x1: float, x2: float, end_iter) -> float:
+    return _general(x1, x2, end_iter, k=1)
 
 
-def right_rec(x1: float, x2: float, s_iter, end_iter) -> float:
-    return _general(x1, x2, s_iter, end_iter)
+def right_rec(x1: float, x2: float, end_iter) -> float:
+    return _general(x1, x2, end_iter+1, s_iter=1)
 
 
-def left_rec(x1: float, x2: float, s_iter, end_iter) -> float:
-    return _general(x1, x2, s_iter, end_iter)
+def left_rec(x1: float, x2: float, end_iter) -> float:
+    return _general(x1, x2, end_iter)
 
 
-def _mp_rec(x1: float, x2: float, s_iter, end_iter) -> float:
-    return _general(x1, x2, s_iter, end_iter, k=1, result=((fun(x1) + fun(x2)) / 2))
+def _mp_rec(x1: float, x2: float, end_iter) -> float:
+    return _general(x1, x2, end_iter, s_iter=1, k=1, result=((fun(x1) + fun(x2)) / 2))
 
 
-def trapezoid(x1: float, x2: float, s_iter, iters, rtol=1e-5) -> float:
+def trapezoid(x1: float, x2: float, iters, rtol=1e-5) -> float:
     """
     Method trapezoid
     """
@@ -68,7 +68,7 @@ def trapezoid(x1: float, x2: float, s_iter, iters, rtol=1e-5) -> float:
     n1 = iters
     while err > abs(rtol * result):
         result_buff = result
-        result = (result + _mp_rec(x1, x2, s_iter, n1)) / 2
+        result = (result + _mp_rec(x1, x2, n1)) / 2
         n1 *= 2
         err = abs(result - result_buff)
     return result
@@ -87,14 +87,15 @@ def parabola(x1: float, x2: float, iters) -> float:
 
 
 if __name__ == '__main__':
-    start, end, rg = (-2, 2, 0.2)
-    xs, ys = output_data(start, end, rg)
+    start, end, rg = (-2, 2.2, 0.2)
+    xs, ys = around(output_data(start, end, rg), 3)
     print(xs, ys, sep='\n')
-    x1, x2 = fsolve(fun, -1.2), fsolve(fun, 0)
-    print(x1, x2)
-    result = quad(fun, -1.3, 0)
-    print(result[0])
-    print(f'ave_rec {ave_rec(-1.3, 0, 0, 20)}')
-    print(f'l {left_rec(-1.3, 0, 0, 100)} r {right_rec(-1.3, 0, 1, 101)} ')
-    print(f'trap {trapezoid(-1.3, 0, 1, 100)}')
-    print(f'parabola {parabola(-1.3, 0, 100)}')
+    x1, x2 = float_(fsolve(fun, -1.2)), float_(fsolve(fun, 0))
+    print(f'roots function x1 - {x1}, x2 - {x2}')
+    result = quad(fun, x1, x2)
+    print(f'insert fun in scipy {result[0]}')
+    iters = 100
+    print(f'ave rec {ave_rec(x1, x2, iters)}')
+    print(f'left rec {left_rec(x1, x2, iters)}\nright rec {right_rec(x1, x2, iters)} ')
+    print(f'trapezoid {trapezoid(x1, x2, iters)}')
+    print(f'parabola {parabola(x1, x2, iters)}')
