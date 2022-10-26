@@ -6,14 +6,12 @@ A * X = B итерационными методами.
 
 """
 from typing import List, Union
-from pprint import pprint
 
 from numpy import array, around, matmul
 from numpy.linalg import inv, solve
 
 from gauss import gauss
 from yacobi import yacobi
-from gauss_seidel import gauss_seidel
 
 
 MATRIX = List[List[int]]
@@ -50,7 +48,7 @@ class Matrix:
         return yacobi(self.matrix, vector, 0.001)
 
     def method_gauss_seidel(self, vector):
-        return gauss_seidel(self.matrix, vector, 0.001)
+        return yacobi(self.matrix, vector, 0.001, gs=True)
 
 
 if __name__ == '__main__':
