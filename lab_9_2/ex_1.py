@@ -1,7 +1,7 @@
 from scipy.stats import linregress
 
+from numpy import sum, mean, float_, array, ones
 from numpy.linalg import lstsq
-from numpy import sum, mean, float_, arange, array, ones
 
 from matplotlib.pyplot import show, plot, legend
 

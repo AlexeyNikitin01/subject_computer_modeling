@@ -1,6 +1,6 @@
 from matplotlib import pyplot as plt
 
-from numpy import poly1d, polyfit, float_, linspace, mean, sum, ones, eye, array, matmul
+from numpy import poly1d, polyfit, float_, linspace, mean, sum, ones, array
 from numpy.linalg import lstsq
 
 

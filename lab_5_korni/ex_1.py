@@ -59,7 +59,7 @@ def show_fun_graphic(data) -> None:
 
 if __name__ == '__main__':
     print(output_data(0.2, -2, 2))
-    print(search_route_fsolve())
-    print(search_route_method_newton())
-    print(*search_route_method_dichotomy())
+    print(f'fsolve {search_route_fsolve()}')
+    print(f'newton {search_route_method_newton()}')
+    print('dichotomy', search_route_method_dichotomy())
     show_fun_graphic(output_data(0.2, -2, 2))
