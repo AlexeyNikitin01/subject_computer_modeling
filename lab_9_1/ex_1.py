@@ -1,8 +1,6 @@
-import pylab
+from matplotlib.pyplot import contour, figure, show, clabel
 
-from matplotlib.pyplot import contour, figure, show, contourf, clabel
-
-from numpy import exp, meshgrid, arange, array
+from numpy import exp, meshgrid, arange
 
 
 def fun(x1: int | float, x2: int | float) -> int | float:

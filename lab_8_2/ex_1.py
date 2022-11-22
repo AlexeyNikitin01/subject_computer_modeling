@@ -57,7 +57,7 @@ def method_hard_ball(start_slice: float | int, h: float = 0.001, e: float = 0.00
     return None
 
 
-def method_(x0: float | int, b: float | int, h=0.01, e=0.0001, d=1) -> None:
+def method_pen_fun(x0: float | int, b: float | int, h=0.01, e=0.0001, d=1) -> None:
     while d > e:
         x = x0
         while abs(h) >= e:
@@ -83,4 +83,4 @@ if __name__ == '__main__':
     print(f"\n{fmin_cg(fun, [-1.8])}\n{'-' * 50}")
     print(f"\n{fmin(fun, -1.8)}\n{'-' * 50}")
     print(f"\n{minimize(fun, -1.8, method='Nelder-Mead')}\n{'-' * 50}")  # dichotomy
-    method_(-2, 1)
+    method_pen_fun(-2, 1)

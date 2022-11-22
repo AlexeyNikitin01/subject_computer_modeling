@@ -10,16 +10,15 @@
 встроенную функцию ode методами Рунге-Кутта и Адамса. Вывести на экран
 таблицу значений и график функции – решения.
 """
-from numpy import arange
+from numpy import arange, around
 
 from matplotlib.pyplot import plot, show
 
-from scipy.integrate import solve_ivp, RK45
+from scipy.integrate import solve_ivp
 
 
 def fun(x, y):
     return y - 3 * y / x
-    # return 0.25 * y**2 + x**2
 
 
 def euler_with_err(x, xk, y, h=0.1, e=0.0001):
@@ -46,7 +45,7 @@ def euler_with_err(x, xk, y, h=0.1, e=0.0001):
         D = d
         h /= 2
         n = 2 * (xk - x0) / h
-        # print(f'n {n} D {D} h/2 {h} y {y} xk {xk} x {x}')
+        print(f'n {n} D {D} h/2 {h} y {y} xk {xk} x {x}')
     return x, y2, D, xs, ys, n
 
 
@@ -55,7 +54,6 @@ def euler_wo_err(x, xk, y, h=0.000098, e=0.0001):
     Method Euler without an error
     """
     n = 2 * (xk - x) / h
-    print(n)
     y1, y2 = y, y
     xs, ys = [], []
     d = 0
@@ -101,7 +99,6 @@ def correct_euler_with_err(x, xk, y, h=0.1, e=0.0001):
         D = d
         h /= 2
         n = 2 * (xk - x0) / h
-        # print(f'n {n} D {D} h/2 {h} y {y} xk {xk} x {x}')
     return x, y2, D, xs, ys, n
 
 
@@ -137,17 +134,6 @@ def _y2_05_h(x, y2, h):
     return h * F2
 
 
-# def runge_kutta(f, t, x0):
-#     n = len(t)
-#     x = array([x0] * n)
-#     for i in xrange(n - 1):
-#         h = t[i + 1] - t[i]
-#         k1 = h * f(x[i], t[i]) / 2.0
-#         x[i + 1] = x[i] + h * f(x[i] + k1, t[i] + h / 2.0)
-#
-#     return x
-
-
 if __name__ == '__main__':
     x0, xk = (1, 2)
     y0 = -2
@@ -155,8 +141,13 @@ if __name__ == '__main__':
     print(f'x {x}, y {y}, d {d} n {n}')
     x, y, d, xs2, ys2, n = correct_euler_with_err(x0, xk, y0)
     print(f'x {x}, y {y}, d {d} n {n}')
+    print('rk')
+    res = solve_ivp(fun, [1, 2], [-2])
+    print(res.y)
     _, _, _, xs1, ys1 = euler_wo_err(x0, xk, y0)
     _, _, _, xs2, ys2 = correct_euler_wo_err(x0, xk, y0)
+    print(around([xs1[-10:], ys1[-10:]], 3))
+    print(around([xs2[-10:], ys2[-10:]], 3))
     plot(xs1, ys1)
     plot(xs2, ys2)
     show()
